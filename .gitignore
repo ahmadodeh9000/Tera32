@@ -1,0 +1,4 @@
+tera32
+*.elf
+*.bin
+!src/prog/*.bin
