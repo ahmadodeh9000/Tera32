@@ -5,7 +5,7 @@ _start:
     li   a7, 64
     li   a0, 1
     la   a1, msg            # expands to auipc + addi, so this tests auipc too
-    li   a2, 15
+    li   a2, 13
     ecall
 
     # sum = 1 + 2 + ... + 10
