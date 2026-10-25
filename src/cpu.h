@@ -2,14 +2,15 @@
 #define cpu_h__
 
 #include <stdint.h>
+#include "common.h"
 
 #define MEM_SIZE    (1 << 16)
 
 typedef struct CPU_t {
-    uint32_t regs[32];
-    uint32_t pc;
+    u32 regs[32];
+    u32 pc;
 
-    uint8_t mem[MEM_SIZE];
+    u8 mem[MEM_SIZE];
 
     int halted;
     int exit_code;
@@ -18,7 +19,7 @@ typedef struct CPU_t {
 
 void cpu_reset(CPU* cpu);
 void cpu_dump(CPU* cpu);
-uint32_t cpu_fetch(CPU* cpu);
+u32 cpu_fetch(CPU* cpu);
 void cpu_step(CPU* cpu);
 
 void cpu_run(CPU* cpu);
