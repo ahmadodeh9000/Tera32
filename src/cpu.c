@@ -2,6 +2,7 @@
 
 #include <stdio.h>  // printf
 #include <string.h> // memset
+#include <unistd.h>
 
 #define MASK(n) ((1u << (n)) - 1)
 
@@ -383,6 +384,28 @@ static void execute(CPU* cpu, uint32_t instr) {
                     }
                     
                     
+                    case 63: { // read(fd,buf,len)
+                        uint32_t fd     = cpu->regs[10];
+                        uint32_t buf    = cpu->regs[11];
+                        uint32_t len    = cpu->regs[12];
+
+                        if (len > MEM_SIZE || buf > MEM_SIZE - len) {   // overflow-safe range check
+                            fprintf(stderr, "read: buffer out of range\n");
+                            cpu->regs[10] = (uint32_t)-1;               // error return
+                            break;
+                        }
+
+                        if (0 != fd) {
+                            cpu->regs[10] = (uint32_t)-1;  
+                            break;
+                        }
+
+                        ssize_t n = read(STDIN_FILENO, &cpu->mem[buf], len);
+                        cpu->regs[10] = (n < 0) ? (uint32_t)-1 : (uint32_t)n;
+                        break;
+
+                    }
+
                     default:
                         fprintf(stderr, "unknown ecall %u\n", cpu->regs[17]);
                         cpu->halted = 1;

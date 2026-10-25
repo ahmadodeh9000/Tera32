@@ -1,5 +1,5 @@
 CROSS ?= riscv64-unknown-elf-
-PROGS := hello stress
+PROGS := hello stress read_s
 
 .PHONY: all clean distclean $(PROGS)
 
