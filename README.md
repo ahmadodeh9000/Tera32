@@ -2,14 +2,13 @@
 
 A small RISC-V emulator written in C. Tera32 implements the **RV32I** base integer instruction set, runs flat binaries on a single hart, and provides a minimal Linux-style syscall interface (`write` and `exit`) so bare-metal programs can print and return an exit code.
 
-It is built for learning: the whole CPU lives in one readable file (`src/cpu.c`), and a built-in test suite checks every instruction group.
+It is built for learning: the whole CPU lives in one readable file (`src/cpu.c`)
 
 ## Features
 
 - Full RV32I user-level instruction set (see [Supported instructions](#supported-instructions))
 - Flat, little-endian, 64 KiB memory
 - `ecall`-based `write` and `exit`, so programs can produce output and a process exit code
-- Built-in self-tests that run when no program is given
 - Example program and a Makefile to cross-compile it
 
 ## Build
@@ -23,7 +22,6 @@ This produces the `tera32` binary in the project root. It needs only a C compile
 ## Usage
 
 ```sh
-./tera32                  # run the built-in self-tests
 ./tera32 program.bin      # load a flat binary at address 0 and run it
 ```
 
@@ -103,18 +101,6 @@ Any other syscall number prints an error and halts. `ebreak` also halts.
 | ALU register | `add`, `sub`, `sll`, `slt`, `sltu`, `xor`, `srl`, `sra`, `or`, `and` |
 | System | `ecall`, `ebreak`, `fence` (no-op) |
 
-## Tests
-
-Running `./tera32` with no arguments executes the self-tests in `src/main.c`:
-
-1. **ALU and U-type**: every immediate and register ALU op, `lui`, `auipc`, writes to `x0` being ignored, and `cpu_fetch` being side-effect free
-2. **Loads and stores**: sign vs. zero extension, byte stores into a word, negative offsets, and the split S-type immediate
-3. **Control flow**: taken and not-taken `beq`/`bne`, a backward loop, `jal`, and `jalr`
-4. **Signed vs. unsigned branches**: `blt`/`bge` against `bltu`/`bgeu` with `0xFFFFFFFF` and equal operands
-5. **Syscalls**: `write` to stdout followed by `exit` with a non-zero code
-
-It prints `all tests passed` on success and returns a non-zero exit code on any failure.
-
 ## Project layout
 
 ```
@@ -123,7 +109,7 @@ It prints `all tests passed` on success and returns a non-zero exit code on any 
 ├── src
 │   ├── cpu.c        # fetch, decode, execute, memory access, syscalls
 │   ├── cpu.h        # CPU struct and public API
-│   ├── main.c       # self-tests and program loader
+│   ├── main.c       # program loader
 │   └── prog
 │       ├── Makefile # cross-compile recipe
 │       └── hello.s  # example program
